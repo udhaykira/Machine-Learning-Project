@@ -1,7 +1,7 @@
 import os
 from box.exceptions import BoxValueError
 import yaml
-from mlProject import logger
+from MLProject import logger
 import json
 import joblib
 from ensure import ensure_annotations
@@ -13,27 +13,30 @@ from typing import Any
 
 @ensure_annotations
 def read_yaml(path_to_yaml: Path) -> ConfigBox:
-    """reads yaml file and returns
+    """Reads a YAML file and returns its content wrapped in a ConfigBox.
 
     Args:
-        path_to_yaml (str): path like input
+        path_to_yaml (str): Path to the YAML file.
 
     Raises:
-        ValueError: if yaml file is empty
-        e: empty file
+        ValueError: If the YAML file is empty.
+        BoxValueError: If the content of the YAML file is not in the expected format.
+        Exception: If an unexpected error occurs while reading the YAML file.
 
     Returns:
-        ConfigBox: ConfigBox type
+        ConfigBox: A ConfigBox containing the content of the YAML file.
     """
     try:
-        with open(path_to_yaml) as yaml_file:
-            content = yaml.safe_load(yaml_file)
-            logger.info(f"yaml file: {path_to_yaml} loaded successfully")
-            return ConfigBox(content)
-    except BoxValueError:
-        raise ValueError("yaml file is empty")
+    with open(path_to_yaml) as yaml_file:
+        content = yaml.safe_load(yaml_file)
+        if content is None:
+            raise ValueError("YAML file is empty")
+        logger.info(f"YAML file '{path_to_yaml}' loaded successfully")
+        print("YAML content:", content)  # Add this line to inspect content
+        return ConfigBox(content)       
     except Exception as e:
-        raise e
+         raise e
+
     
 
 
